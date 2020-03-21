@@ -1,15 +1,17 @@
-import pandas as pd
-import time
-import random
 import sys,os
 import utils
 import struct
 import happybase
 
 """
-python hbase_test.py --topic --target --scence --out --start_time --end_time
+python data_gen.py --topic --target --scene --start_time --end_time
+    topic = sys.argv[1]
+    target = sys.argv[2]
+    scene = sys.argv[3]
+    start_time = sys.argv[4]
+    end_time = sys.argv[5]
 Example:
-    python hbase_test.py www.cy.com pv count models/pv/ 2020-03-10 2020-03-14
+    python data_gen.py network_bw 金山酒仙桥m8机房_75_out count 2020-01-10 2020-03-16
 """
 if __name__ == '__main__':
 
@@ -26,14 +28,14 @@ if __name__ == '__main__':
     start_time = sys.argv[4]
     end_time = sys.argv[5]
     # 起止时间补足时分秒，默认开始时间为当天日期00:00:00，终止时间为当天日期23:59:59
-    start_time = start_time + "_00:00:00"
-    end_time = end_time + "_23:59:59"
+    start_time = utils.time_to_timestamp(start_time + "_00:00:00")
+    end_time = utils.time_to_timestamp(end_time + "_23:59:59")
 
     save_name = 'data/' + scene + '/data'
     if os.path.exists(save_name):
         os.remove(save_name)
-    res = '' # 存储所需字段
-    cnt = 1 # 计数
+    res = ''  # 存储所需字段
+    cnt = 1  # 计数
     flag = True
     row_prefix = (topic + '|' + target + '|' + scene).encode('utf-8')
     for row in t.scan(row_prefix=row_prefix):
