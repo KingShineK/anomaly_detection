@@ -44,7 +44,8 @@ if __name__ == '__main__':
             print(rowKey)
             timestamp = row[1][b'data:timestamp']
             timestamp = int(struct.unpack(">Q",timestamp)[0]/1000)
-
+            count = row[1][b'data:count']
+            count = struct.unpack(">Q", count)[0]
             value = row[1][b'data:value']
             value = struct.unpack(">Q",value)[0]
             ratio = row[1][b'data:ratio']
@@ -58,7 +59,7 @@ if __name__ == '__main__':
             if timestamp >= start_time:
                 flag = False
                 if scene == 'count':
-                    res = str(timestamp) + ',' + str(value) + '\n'
+                    res = str(timestamp) + ',' + str(count) + '\n'
                     with open(save_name, 'a', encoding='utf8') as f:
                         f.write(res)
                     print('已保存%d条数据' % cnt)
@@ -70,7 +71,7 @@ if __name__ == '__main__':
                     print('已保存%d条数据' % cnt)
                     cnt += 1
                 elif scene == 'ratio':
-                    res = str(timestamp) + ',' + str(value) + ',' + str(ratio) + '\n'
+                    res = str(timestamp) + ',' + str(count) + ',' + str(ratio) + '\n'
                     with open(save_name, 'a', encoding='utf8') as f:
                         f.write(res)
                     print('已保存%d条数据' % cnt)
